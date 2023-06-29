@@ -29,6 +29,7 @@ module Lecture1
     , subString
     , strSum
     , lowerAndGreater
+    , lowerAndGreaterRec
     ) where
 
 -- VVV If you need to import libraries, do it after this line ... VVV
@@ -39,6 +40,7 @@ module Lecture1
 its behaviour, possible types for the function arguments and write the
 type signature explicitly.
 -}
+makeSnippet :: Int -> String -> String
 makeSnippet limit text = take limit ("Description: " ++ text) ++ "..."
 
 {- | Implement a function that takes two numbers and finds sum of
@@ -54,7 +56,9 @@ Explanation: @sumOfSquares 3 4@ should be equal to @9 + 16@ and this
 is 25.
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-sumOfSquares x y = error "TODO!"
+sumOfSquares :: Num a => a -> a -> a
+sumOfSquares x y = powerOf x 2 + powerOf y 2
+    where powerOf a p = a ^ (p::Int)
 
 {- | Implement a function that returns the last digit of a given number.
 
@@ -67,7 +71,8 @@ sumOfSquares x y = error "TODO!"
 
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-lastDigit n = error "lastDigit: Not implemented!"
+lastDigit :: Integral a => a -> a
+lastDigit n = abs n `mod` 10
 
 {- | Write a function that takes three numbers and returns the
 difference between the biggest number and the smallest one.
@@ -81,7 +86,11 @@ and 1 is the smallest, and 7 - 1 = 6.
 Try to use local variables (either let-in or where) to implement this
 function.
 -}
-minmax x y z = error "TODO"
+minmax :: (Num a, Ord a) => a -> a -> a -> a
+minmax x y z =
+    let mx = max (max x y) z
+        mn = min (min x y) z
+    in mx-mn
 
 {- | Implement a function that takes a string, start and end positions
 and returns a substring of a given string from the start position to
@@ -98,7 +107,10 @@ start position can be considered as zero (e.g. substring from the
 first character) and negative end position should result in an empty
 string.
 -}
-subString start end str = error "TODO"
+subString :: Int -> Int -> String -> String
+subString start end str =
+    let realStart = max start 0
+    in take (end-realStart+1) (drop realStart str)
 
 {- | Write a function that takes a String — space separated numbers,
 and finds a sum of the numbers inside this string.
@@ -108,7 +120,8 @@ and finds a sum of the numbers inside this string.
 
 The string contains only spaces and/or numbers.
 -}
-strSum str = error "TODO"
+strSum :: (Num a, Read a) => String -> a
+strSum str = sum (map read (words str))
 
 {- | Write a function that takes a number and a list of numbers and
 returns a string, saying how many elements of the list are strictly
@@ -123,4 +136,17 @@ and lower than 6 elements (4, 5, 6, 7, 8 and 9).
 
 🕯 HINT: Use recursion to implement this function.
 -}
-lowerAndGreater n list = error "TODO"
+lowerAndGreater :: (Ord a, Show a) => a -> [a] -> String
+lowerAndGreater n list =
+    show n ++ " is greater than " ++ show countLower ++ " elements and lower than " ++ show countGreater ++ " elements"
+    where 
+        countGreater = length (filter (>n) list)
+        countLower = length (filter (<n) list)
+
+lowerAndGreaterRec :: (Ord a, Show a) => a -> [a] -> String
+lowerAndGreaterRec n = go 0 0
+    where go greaterAmount lowerAmount remainingList
+            | null remainingList     = show n ++ " is greater than " ++ show greaterAmount ++ " elements and lower than " ++ show lowerAmount ++ " elements"
+            | head remainingList > n = go (greaterAmount+1::Int) lowerAmount (tail remainingList)
+            | head remainingList < n = go greaterAmount (lowerAmount+1::Int) (tail remainingList)
+            | otherwise              = go greaterAmount lowerAmount (tail remainingList)
