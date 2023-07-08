@@ -147,8 +147,7 @@ splitStringBy predicate str =
     case dropWhile predicate str of
         "" -> []
         str' -> entry:splitStringBy predicate str''
-            where
-                (entry, str'') = break predicate str'
+            where (entry, str'') = break predicate str'
 
 
 parseName :: String -> Maybe String
@@ -362,7 +361,7 @@ the file doesn't have any products.
 calculateStats :: String -> String
 -- How to make it using only funciton composition 
 -- if I combine rows can handle only not empty rows and I have to handle empty list case?
-calculateStats content =  case mapMaybe parseRow (splitStringBy (=='\n') content) of
+calculateStats content = case mapMaybe parseRow (splitStringBy (=='\n') content) of
     [] -> "No valid data found"
     (x:xs) -> displayStats (combineRows (x:|xs))
 
@@ -376,10 +375,9 @@ Use functions 'readFile' and 'putStrLn' here.
 
 printProductStats :: FilePath -> IO ()
 printProductStats path = 
-    try (readFile path) >>=
-        \case 
-            Left (err::SomeException) -> putStrLn ("Can't read file: " ++ show err)
-            Right content -> putStrLn (calculateStats content)
+    try (readFile path) >>= \case 
+        Left (err::SomeException) -> putStrLn ("Can't read file: " ++ show err)
+        Right content -> putStrLn (calculateStats content)
 
 {-
 Okay, I lied. This is not the last thing. Now, we need to wrap
@@ -395,12 +393,10 @@ https://hackage.haskell.org/package/base-4.16.0.0/docs/System-Environment.html#v
 -}
 
 main :: IO ()
-main = do
-    args <- getArgs
-    case args of
-        [] -> putStrLn "No filename specified"
-        [filename] -> printProductStats filename
-        _ -> putStrLn "Don't know what to do with so many arguments, sorry"
+main = getArgs >>= \case
+    [] -> putStrLn "No filename specified"
+    [filename] -> printProductStats filename
+    _ -> putStrLn "Don't know what to do with so many arguments, sorry"
 
 
 {-
