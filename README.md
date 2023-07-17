@@ -1,6 +1,6 @@
 # exercises
 
-[![GitHub CI](https://github.com/haskell-beginners-2022/exercises/workflows/CI/badge.svg)](https://github.com/haskell-beginners-2022/exercises/actions)
+[![GitHub CI](https://github.com/Mugenor/haskell-exercises/workflows/CI/badge.svg)](https://github.com/Mugenor/haskell-exercises/actions)
 [![Hackage](https://img.shields.io/hackage/v/exercises.svg?logo=haskell)](https://hackage.haskell.org/package/exercises)
 [![MPL-2.0 license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 
